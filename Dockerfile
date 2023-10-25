@@ -3,14 +3,15 @@ FROM python:3.9
 WORKDIR /app
 
 COPY Pipfile Pipfile.lock ./
-RUN apt-get update && apt-get install -y
-RUN pip3 install pipenv
-RUN pip3 install datapane
-RUN pipenv install --dev --system --deploy
+RUN apt-get update && \
+    apt-get -y upgrade && \
+    apt-get install -y && \
+    pip3 install pipenv && \
+    pip3 install datapane && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY scaler.pkl .
-COPY model.pkl .
-
+COPY scaler.pkl model.pkl ./
 COPY main.py .
 
 ENTRYPOINT ["python", "main.py"]
